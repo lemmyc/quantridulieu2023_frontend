@@ -1,0 +1,28 @@
+.hidden-data{
+    display: none;
+}
+.book-librarian-container{
+    .container-control{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 10px;
+    }
+    .book-librarian-table{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        table{
+            height: 100%;
+            width: 90%;
+            thead {
+
+                tr{
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+
+}
