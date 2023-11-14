@@ -11,6 +11,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import NextWeekIcon from '@mui/icons-material/NextWeek';
 import {
     MDBBtn,
     MDBModal,
@@ -42,6 +43,8 @@ const TicketsLibrarian = (props) => {
     const [dataModalFine, setDataModalFine] = useState([]);
     const [openModalFine, setOpenModalFine] = useState(false);
     const [openModalTicket, setOpenModalTicket] = useState(false);
+    const [openModalReturnTicket, setOpenModalReturnTicket] = useState(false);
+    const [openModalAddFine, setOpenModalAddFine] = useState(false);
     const [idMuonSachSelected, setIdMuonSachSelected] = useState(null);
     const [objTicketSelected, setObjTicketSelected] = useState({
         idNguoiDung: "",
@@ -49,10 +52,16 @@ const TicketsLibrarian = (props) => {
         ngayMuon: "",
         ngayHenTra: "",
         ngayTraThucTe: "",
-        TrangThaiMuon: "",
-        idThuThu: "",
+        trangThaiMuon: "borrowing",
+        idThuThu: localStorage.getItem("idNguoiDung"),
+        tenThuThu: localStorage.getItem("tenNguoiDung"),
     });
+    const [objFine, setObjFine] = useState({
+        NgayGhiNhan: moment().format("YYYY-MM-DD"),
+        SoTienPhat: 0,
+    })
     const [mangSach, setMangSach] = useState([]);
+    const [mangSachAvailable, setMangSachAvailable] = useState([]);
     const [mangReader, setMangReader] = useState([]);
     
     // componentDidMout
@@ -66,18 +75,42 @@ const TicketsLibrarian = (props) => {
     useEffect(() => {
         if(!openModalTicket){
             setIdMuonSachSelected(null);
-            setObjTicketSelected({
-                idNguoiDung: "",
-                idSach: "",
-                ngayMuon: "",
-                ngayHenTra: "",
-                ngayTraThucTe: "",
-                TrangThaiMuon: "",
-                idThuThu: "",
-            });
+            refreshObjTicketSelected();
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [openModalTicket]);
+
+    useEffect(() => {
+        if(!openModalReturnTicket){
+            setIdMuonSachSelected(null);
+            refreshObjTicketSelected();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openModalReturnTicket]);
+
+    useEffect(() => {
+        if(!openModalAddFine){
+            setIdMuonSachSelected(null);
+            setObjFine({
+                NgayGhiNhan: moment().format("YYYY-MM-DD"),
+                SoTienPhat: 0,
+            })
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openModalAddFine]);
+
+    const refreshObjTicketSelected = () => {
+        setObjTicketSelected({
+            idNguoiDung: "",
+            idSach: "",
+            ngayMuon: "",
+            ngayHenTra: "",
+            ngayTraThucTe: "",
+            trangThaiMuon: "borrowing",
+            idThuThu: localStorage.getItem("idNguoiDung"),
+            tenThuThu: localStorage.getItem("tenNguoiDung"),
+        });
+    }
     
     const getAllTickets = () => {
         fetch(
@@ -103,7 +136,9 @@ const TicketsLibrarian = (props) => {
         .then((response)  => {
            response.json().then((data) => {
                 if(data){
+                    const arrSachAva = data.filter((book) => book.S_TrangThai === "available");
                     setMangSach(data);
+                    setMangSachAvailable(arrSachAva);
                 }
             }).catch((err) => {
                 console.log(err);
@@ -194,7 +229,8 @@ const TicketsLibrarian = (props) => {
       </MDBModal>
     }
 
-    const renderModalAddTicket = () => {
+    const renderModalTicket = () => {
+        const mangSachRender = (idMuonSachSelected) ? mangSach : mangSachAvailable;
         return  <MDBModal id="modalTicket" open={openModalTicket} tabIndex="-1" staticBackdrop={true}>
             <MDBModalDialog>
                 <MDBModalContent>
@@ -208,12 +244,13 @@ const TicketsLibrarian = (props) => {
                     </MDBModalHeader>
                     <MDBModalBody>
                         <Grid container spacing={2}>
+                            {/* tenSach */}
                             <Grid item xs={12}>
-                                <FormControl fullWidth>
+                                <FormControl fullWidth={true}>
                                     <InputLabel id="lb-slc-ten-sach">Tên Sách</InputLabel>
                                     <Select
                                         disabled={(idMuonSachSelected) ? true : false}
-                                        fullWidth
+                                        fullWidth={true}
                                         labelId="lb-slc-ten-sach"
                                         id="slc-ten-sach"
                                         value={objTicketSelected.idSach}
@@ -221,19 +258,21 @@ const TicketsLibrarian = (props) => {
                                         onChange={e => setObjTicketSelected({ ...objTicketSelected, idSach: e.target.value } )}
                                     >
                                         {
-                                            mangSach.map((item) => {
+
+                                            mangSachRender.map((item) => {
                                                 return <MenuItem key={`sach-${item.S_ID}`} value={item.S_ID}>{item.S_TenSach}</MenuItem>
                                             })
                                         }
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            {/* idNguoiDung */}
                             <Grid item xs={12}>
-                                <FormControl fullWidth id="form-slc-nguoimuon">
-                                    <InputLabel fullWidth id="lb-slc-ten-sach">Tên Người Mượn</InputLabel>
+                                <FormControl fullWidth={true} id="form-slc-nguoimuon">
+                                    <InputLabel id="lb-slc-ten-sach">Tên Người Mượn</InputLabel>
                                     <Select
                                         disabled={(idMuonSachSelected) ? true : false}
-                                        fullWidth
+                                        fullWidth={true}
                                         labelId="lb-slc-ten-nguoi-muon"
                                         id="slc-ten-nguoi-muon"
                                         value={objTicketSelected.idNguoiDung}
@@ -248,16 +287,18 @@ const TicketsLibrarian = (props) => {
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            {/* trangThaiMuon */}
                             <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel fullWidth id="lb-slc-trang-thai">Trạng Thái</InputLabel>
+                                <FormControl fullWidth={true}>
+                                    <InputLabel id="lb-slc-trang-thai">Trạng Thái</InputLabel>
                                     <Select
-                                        fullWidth
+                                        disabled={(!idMuonSachSelected) ? true : false}
+                                        fullWidth={true}
                                         labelId="lb-slc-trang-thai"
                                         id="slc-trang-thai"
-                                        value={objTicketSelected.TrangThaiMuon}
+                                        value={objTicketSelected.trangThaiMuon}
                                         label="Trạng Thái"
-                                        onChange={e => setObjTicketSelected({ ...objTicketSelected, TrangThaiMuon: e.target.value } )}
+                                        onChange={e => setObjTicketSelected({ ...objTicketSelected, trangThaiMuon: e.target.value } )}
                                     >
                                         <MenuItem key="borrowing" value={"borrowing"}>Đang mượn</MenuItem>
                                         <MenuItem key="on_time" value={"on_time"}>Trả đúng hạn</MenuItem>
@@ -267,67 +308,78 @@ const TicketsLibrarian = (props) => {
                                     </Select>
                                 </FormControl>
                             </Grid>
+                            {/* ngayMuon */}
                             <Grid item xs={4}>
                                 <TextField
-                                    className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
+                                    // className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
+                                    className={`lbDatePicker`}
                                     required
                                     name="ngayMuon"
                                     type="text"
                                     id="ngayMuon"
                                     label="Ngày Mượn"
                                     autoComplete="ngayMuon"
-                                    value={objTicketSelected.ngayMuon !== "" ? formatDate(objTicketSelected.ngayMuon, "DD/MM/YYYY") : moment().format("DD/MM/YYYY")}
+                                    value={(objTicketSelected.ngayMuon === "") ? "" : formatDate(objTicketSelected.ngayMuon, "DD/MM/YYYY")}
                                 />
                                 <input
-                                    readOnly={(idMuonSachSelected) ? true : false}
+                                    // readOnly={(idMuonSachSelected) ? true : false}
                                     type="date" 
                                     id="ngayMuonPicker" 
                                     className="ipDatePicker"
                                     name="ngayMuonPicker" 
-                                    value={objTicketSelected.ngayMuon !== "" ? formatDate(objTicketSelected.ngayMuon, "YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                                    value={formatDate(objTicketSelected.ngayMuon, "YYYY-MM-DD")}
                                     onChange={e => setObjTicketSelected({ ...objTicketSelected, ngayMuon: e.target.value } )}
                                 />
                             </Grid>
+                            {/* ngayHenTra */}
                             <Grid item xs={4}>
                                 <TextField
-                                    className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
+                                    // className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
+                                    className={`lbDatePicker`}
+                                    required
                                     name="ngayHenTra"
                                     type="text"
                                     id="ngayHenTra"
                                     label="Ngày Hẹn Trả"
                                     autoComplete="ngayHenTra"
-                                    value={objTicketSelected.ngayHenTra !== "" ? formatDate(objTicketSelected.ngayHenTra, "DD/MM/YYYY") : moment().format("DD/MM/YYYY")}
+                                    value={(objTicketSelected.ngayHenTra === "") ? "" : formatDate(objTicketSelected.ngayHenTra, "DD/MM/YYYY")}
                                 />
                                 <input
-                                    readOnly={(idMuonSachSelected) ? true : false}
+                                    // readOnly={(idMuonSachSelected) ? true : false}
                                     type="date" 
                                     id="ngayHenTraPicker" 
                                     className="ipDatePicker"
                                     name="ngayHenTraPicker" 
-                                    value={objTicketSelected.ngayHenTra !== "" ? formatDate(objTicketSelected.ngayHenTra, "YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                                    value={formatDate(objTicketSelected.ngayHenTra, "YYYY-MM-DD")}
                                     onChange={e => setObjTicketSelected({ ...objTicketSelected, ngayHenTra: e.target.value } )}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            {/* ngayTraThucTe */}
+                            <Grid item xs={4} sx={{ display: (!idMuonSachSelected) ? "none": "auto" }}>
                                 <TextField
-                                    className="lbDatePicker"
+                                    className={`lbDatePicker ${(!idMuonSachSelected) ? "disable-item" : ""}`}
                                     name="ngayTraThucTe"
                                     type="text"
                                     id="ngayTraThucTe"
                                     label="Ngày Trả Thực Tế"
                                     autoComplete="ngayTraThucTe"
-                                    value={objTicketSelected.ngayTraThucTe !== "" ? formatDate(objTicketSelected.ngayTraThucTe, "DD/MM/YYYY") : moment().format("DD/MM/YYYY")}
+                                    value={
+                                        (!idMuonSachSelected ||objTicketSelected.ngayTraThucTe === "" ) ? "" 
+                                        : formatDate(objTicketSelected.ngayTraThucTe, "DD/MM/YYYY")
+                                    }
                                 />
                                 <input
-                                    type="date" 
+                                    type="date"
+                                    readOnly={(!idMuonSachSelected) ? true : false}
                                     id="ngayTraThucTePicker" 
                                     className="ipDatePicker"
                                     name="ngayTraThucTePicker" 
-                                    value={objTicketSelected.ngayTraThucTe !== "" ? formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                                    value={formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD")}
                                     onChange={e => setObjTicketSelected({ ...objTicketSelected, ngayTraThucTe: e.target.value } )}
 
                                 />
                             </Grid>
+                            {/* tenThuThu */}
                             <Grid item xs={12}>
                                 <TextField
 				                    inputProps={{ readOnly: true }}
@@ -337,7 +389,7 @@ const TicketsLibrarian = (props) => {
                                     id="tenThuThu"
                                     label="Tên Thủ thư"
                                     autoComplete="tenThuThu"
-                                    value={localStorage.getItem("tenNguoiDung")}
+                                    value={objTicketSelected.tenThuThu}
                                 />
                             </Grid>
                         </Grid>
@@ -346,33 +398,137 @@ const TicketsLibrarian = (props) => {
                         <MDBBtn color='secondary' onClick={() => setOpenModalTicket(false)}>
                             Đóng
                         </MDBBtn>
+                        {
+                            idMuonSachSelected
+                            ? <MDBBtn id="btn-update-publisher" onClick={(evt) => callApiUpdateTicket(evt)}>Cập nhật</MDBBtn>
+                            : <MDBBtn id="btn-add-publisher" onClick={(evt) => callApiAddTicket(evt)}>Thêm Mới</MDBBtn>
+                        }
                     </MDBModalFooter>
                 </MDBModalContent>
             </MDBModalDialog>
       </MDBModal>
     }
 
-    const callApiAddTicket = () =>{
-        if(objTicketSelected.tenNXB === "" 
-            || objTicketSelected.namThanhLap === ""
+    const renderModalReturnTicket = () => {
+        return  <MDBModal id="modalReturnTicket" open={openModalReturnTicket} tabIndex="-1" staticBackdrop={true}>
+            <MDBModalDialog>
+                <MDBModalContent>
+                    <MDBModalHeader>
+                        <MDBModalTitle>Trả thông tin mượn sách</MDBModalTitle>
+                    </MDBModalHeader>
+                    <MDBModalBody>
+                        <Grid container spacing={2}>
+                            {/* trangThaiMuon */}
+                            <Grid item xs={12}>
+                                <FormControl fullWidth={true}>
+                                    <InputLabel id="lb-slc-trang-thai">Trạng Thái</InputLabel>
+                                    <Select
+                                        fullWidth={true}
+                                        labelId="lb-slc-trang-thai"
+                                        id="slc-trang-thai"
+                                        value={objTicketSelected.trangThaiMuon}
+                                        label="Trạng Thái"
+                                        onChange={e => setObjTicketSelected({ ...objTicketSelected, trangThaiMuon: e.target.value } )}
+                                    >
+                                        <MenuItem key="borrowing" value={"borrowing"}>Đang mượn</MenuItem>
+                                        <MenuItem key="on_time" value={"on_time"}>Trả đúng hạn</MenuItem>
+                                        <MenuItem key="overdue" value={"overdue"}>Trễ hạn</MenuItem>
+                                        <MenuItem key="damaged" value={"damaged"}>Hư hại</MenuItem>
+                                        <MenuItem key="lost" value={"lost"}>Thất lạc</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            {/* ngayTraThucTe */}
+                            <Grid item xs={4}>
+                                <TextField
+                                    className={`lbDatePicker`}
+                                    name="ngayTraThucTe"
+                                    type="text"
+                                    id="ngayTraThucTe"
+                                    label="Ngày Trả Thực Tế"
+                                    autoComplete="ngayTraThucTe"
+                                    value={
+                                        (objTicketSelected.ngayTraThucTe === "" ) ? "" 
+                                        : formatDate(objTicketSelected.ngayTraThucTe, "DD/MM/YYYY")
+                                    }
+                                />
+                                <input
+                                    type="date"
+                                    id="ngayTraThucTePicker" 
+                                    className="ipDatePicker"
+                                    name="ngayTraThucTePicker" 
+                                    value={objTicketSelected.ngayTraThucTe !== "" ? formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD") : moment().format("YYYY-MM-DD")}
+                                    onChange={e => setObjTicketSelected({ ...objTicketSelected, ngayTraThucTe: e.target.value } )}
+
+                                />
+                            </Grid>
+                        </Grid>
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color='secondary' onClick={() => setOpenModalReturnTicket(false)}>
+                            Đóng
+                        </MDBBtn>
+                        <MDBBtn id="btn-update-publisher" onClick={(evt) => callApiReturnTicket(evt)}>Trả sách</MDBBtn>
+                    </MDBModalFooter>
+                </MDBModalContent>
+            </MDBModalDialog>
+      </MDBModal>
+    }
+
+    const renderModalAddFine = () => {
+        return  <MDBModal id="modalAddFine" open={openModalAddFine} tabIndex="-1" staticBackdrop={true}>
+            <MDBModalDialog>
+                <MDBModalContent>
+                    <MDBModalHeader>
+                        <MDBModalTitle>Thêm Khoản Phạt</MDBModalTitle>
+                    </MDBModalHeader>
+                    <MDBModalBody>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="soTienPhat"
+                                    type="text"
+                                    id="soTienPhat"
+                                    label="Số tiền phạt"
+                                    autoComplete="Số tiền phạt"
+                                    value={objFine.SoTienPhat}
+                                    onChange={(evt) => setObjFine({...objFine, SoTienPhat: evt.target.value})}
+                                />
+                            </Grid>
+                        </Grid>
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color='secondary' onClick={() => setOpenModalAddFine(false)}>
+                            Đóng
+                        </MDBBtn>
+                        <MDBBtn id="btn-add-fine" onClick={(evt) => callApiAddFine(evt)}>Thêm khoản phạt</MDBBtn>
+                    </MDBModalFooter>
+                </MDBModalContent>
+            </MDBModalDialog>
+      </MDBModal>
+    }
+
+    const callApiAddTicket = (evt) =>{
+        if(objTicketSelected.idNguoiDung === "" 
+            || objTicketSelected.idSach === ""
+            || objTicketSelected.ngayMuon === ""
+            || objTicketSelected.ngayHenTra === ""
+            || objTicketSelected.trangThaiMuon === ""
         ){
             alert("Vui lòng nhập đầy đủ thông tin");
         } else {
             fetch(
-                `${API_MAIN_URL}/add-publisher`,
+                `${API_MAIN_URL}/add-ticket`,
                 {
                     ...HEADER_REQUEST_POST,
                     method: "POST",
+                    // idNguoiDung, idSach, ngayMuon, ngayHenTra, idThuThu
                     body: JSON.stringify({ 
-                        // tenNXB: objTicketSelected.tenNXB, 
-                        // namThanhLap: objTicketSelected.namThanhLap
-                        // idNguoiDung: objTicketSelected.ID_Nguoi_Muon,
-                        // idSach: objTicketSelected.MS_IDSach,
-                        // ngayMuon: (dư.MS_NgayMuon) ? ticketInfo.MS_NgayMuon : "",
-                        // ngayHenTra: (ticketInfo.MS_NgayHenTra) ? ticketInfo.MS_NgayHenTra : "",
-                        // ngayTraThucTe: (ticketInfo.MS_NgayTraThucTe) ? ticketInfo.MS_NgayTraThucTe : "",
-                        // TrangThaiMuon: ticketInfo.MS_TrangThaiMuon,
-                        // idThuThu: ticketInfo.ID_Thu_Thu,
+                        idNguoiDung: objTicketSelected.idNguoiDung,
+                        idSach: objTicketSelected.idSach,
+                        ngayMuon: (objTicketSelected.ngayMuon) ? formatDate(objTicketSelected.ngayMuon, "YYYY-MM-DD") : null,
+                        ngayHenTra: (objTicketSelected.ngayHenTra) ? formatDate(objTicketSelected.ngayHenTra, "YYYY-MM-DD") : null,
+                        idThuThu: objTicketSelected.idThuThu,
                     }), 
                 })
             .then((response)  => {
@@ -380,8 +536,8 @@ const TicketsLibrarian = (props) => {
                     // if them thanh cong
                     if(data?.success){
                         alert("Đã thêm thông tin thành công");
-                        // callAPIGetPublisherList();
-                        // setOpenModalPublisher(false);
+                        getAllTickets();
+                        setOpenModalTicket(false);
                     } else {
                         alert("Đã xảy ra lỗi, không thành công");
                     }
@@ -392,12 +548,111 @@ const TicketsLibrarian = (props) => {
         }
     }
 
+    const callApiUpdateTicket = (evt) =>{
+        if(objTicketSelected.ngayMuon === ""
+            || objTicketSelected.ngayHenTra === ""
+            || objTicketSelected.ngayTraThucTe === ""
+            || objTicketSelected.trangThaiMuon === ""
+        ){
+            alert("Vui lòng nhập đầy đủ thông tin");
+        } else {
+            fetch(
+                `${API_MAIN_URL}/edit-ticket`,
+                {
+                    ...HEADER_REQUEST_POST,
+                    method: "PUT",
+                    // idMuonSach, idNguoiDung, idSach, ngayMuon, ngayHenTra, ngayTraThucTe, TrangThaiMuon, idThuThu
+                    body: JSON.stringify({ 
+                        idMuonSach: idMuonSachSelected,
+                        idNguoiDung: objTicketSelected.idNguoiDung,
+                        idSach: objTicketSelected.idSach,
+                        ngayMuon: formatDate(objTicketSelected.ngayMuon, "YYYY-MM-DD"),
+                        ngayHenTra: formatDate(objTicketSelected.ngayHenTra, "YYYY-MM-DD"),
+                        ngayTraThucTe: formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD"),
+                        trangThaiMuon: objTicketSelected.trangThaiMuon,
+                        idThuThu: objTicketSelected.idThuThu,
+                    }), 
+                })
+            .then((response)  => {
+            response.json().then((data) => {
+                    // if them thanh cong
+                    if(data?.success){
+                        alert("Đã cập nhật thông tin thành công");
+                        getAllTickets();
+                        setOpenModalTicket(false);
+                    } else {
+                        alert("Đã xảy ra lỗi, không thành công");
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                }) 
+            });
+        }
+    }
+
+    const callApiReturnTicket = (evt) => {
+        fetch(
+            `${API_MAIN_URL}/add-book-return`,
+            {
+                ...HEADER_REQUEST_POST,
+                method: "POST",
+                // idMuonSach, TrangThaiMuon, ngayTraThucTe
+                body: JSON.stringify({ 
+                    idMuonSach: idMuonSachSelected,
+                    trangThaiMuon: objTicketSelected.trangThaiMuon,
+                    ngayTraThucTe: (objTicketSelected.ngayTraThucTe === "") 
+                                    ? moment().format("YYYY-MM-DD") : formatDate(objTicketSelected.ngayTraThucTe , "YYYY-MM-DD")
+                }), 
+            })
+        .then((response)  => {
+        response.json().then((data) => {
+                if(data?.success){
+                    alert("Đã cập nhật thông tin trả sách thành công");
+                    getAllTickets();
+                    setOpenModalReturnTicket(false);
+                } else {
+                    alert("Đã xảy ra lỗi, không thành công");
+                }
+            }).catch((err) => {
+                console.log(err);
+            }) 
+        });
+    }
+    
+    const callApiAddFine = () => {
+        fetch(
+            `${API_MAIN_URL}/add-fine`,
+            {
+                ...HEADER_REQUEST_POST,
+                method: "POST",
+                // idMuonSach, NgayGhiNhan, SoTienPhat
+                body: JSON.stringify({ 
+                    idMuonSach: idMuonSachSelected,
+                    NgayGhiNhan: objFine.NgayGhiNhan,
+                    SoTienPhat: objFine.SoTienPhat,
+                }), 
+            })
+        .then((response)  => {
+        response.json().then((data) => {
+                if(data?.success){
+                    alert("Đã thêm khoản phạt");
+                    getAllTickets();
+                    setOpenModalAddFine(false);
+                } else {
+                    alert("Đã xảy ra lỗi, không thành công");
+                }
+            }).catch((err) => {
+                console.log(err);
+            }) 
+        });
+    }
+
     const handleAddTicket = (evt) =>{
         evt.preventDefault();
         setOpenModalTicket(true);
     }
 
-    const handleEditTicket = (evt, idMuonSach) =>{
+    const handleEditTicket = (evt, idMuonSach, flgReturnTicket = false) =>{
         evt.preventDefault();
         setIdMuonSachSelected(idMuonSach);
         fetch(
@@ -414,15 +669,25 @@ const TicketsLibrarian = (props) => {
                         ngayMuon: (ticketInfo.MS_NgayMuon) ? ticketInfo.MS_NgayMuon : "",
                         ngayHenTra: (ticketInfo.MS_NgayHenTra) ? ticketInfo.MS_NgayHenTra : "",
                         ngayTraThucTe: (ticketInfo.MS_NgayTraThucTe) ? ticketInfo.MS_NgayTraThucTe : "",
-                        TrangThaiMuon: ticketInfo.MS_TrangThaiMuon,
+                        trangThaiMuon: ticketInfo.MS_TrangThaiMuon,
                         idThuThu: ticketInfo.ID_Thu_Thu,
+                        tenThuThu: ticketInfo.Ten_Thu_Thu,
                     });
-                    setOpenModalTicket(true);
+                    if(flgReturnTicket){
+                        setOpenModalReturnTicket(true);
+                    } else {
+                        setOpenModalTicket(true);
+                    }
                 }
             }).catch((err) => {
                 console.log(err);
             }) 
         });
+    }
+
+    const handleAddFine = (evt, idMuonSach) => {
+        setIdMuonSachSelected(idMuonSach);
+        setOpenModalAddFine(true);
     }
 
     return (
@@ -456,6 +721,7 @@ const TicketsLibrarian = (props) => {
                                 <th scope="col">Khoản Phạt</th>
                                 <th scope="col">Thêm Khoản Phạt</th>
                                 <th scope="col">Chỉnh sửa</th>
+                                <th scope="col">Trả Sách</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -492,7 +758,7 @@ const TicketsLibrarian = (props) => {
                                         </td>
                                         <td className="col-icon">
                                             <IconButton aria-label="fingerprint" color="primary"
-                                                    onClick={(e) => getDataKhoanPhat(e, ticket.MS_ID)}
+                                                    onClick={(e) => handleAddFine(e, ticket.MS_ID)}
                                                 >
                                                     <QueueIcon />
                                             </IconButton>
@@ -504,6 +770,13 @@ const TicketsLibrarian = (props) => {
                                                     <BorderColorIcon />
                                             </IconButton>
                                         </td>
+                                        <td className="col-icon">
+                                            <IconButton aria-label="fingerprint" color="primary"
+                                                    onClick={(e) => handleEditTicket(e, ticket.MS_ID, true)}
+                                                >
+                                                    <NextWeekIcon />
+                                            </IconButton>
+                                        </td>
                                     </tr>
                                 })
                             }
@@ -511,7 +784,9 @@ const TicketsLibrarian = (props) => {
                     </table>
                 </div>
                 {renderModalFines()}
-                {renderModalAddTicket()}
+                {renderModalTicket()}
+                {renderModalReturnTicket()}
+                {renderModalAddFine()}
             </div>
         </React.Fragment>
     );

@@ -26,17 +26,17 @@
             }
         }
     }
-    .modal-dialog{
-        width: 62%;
-        max-width: unset;
-    }
     .modal-footer{
         button {
             height: 38px;
             width: 64px;
         }
     }
-    #modalTicket{
+    #modalFine, #modalReturnTicket, #modalTicket, #modalReturnTicketm {
+        .modal-dialog{
+            width: 62%;
+            max-width: unset;
+        }
         .disable-item{
             -webkit-text-fill-color: rgb(0 0 0 / 55%);
         }
@@ -55,7 +55,7 @@
             height: 18px;
             width: 21px;
             border: 0;
-            margin-top: 14px;
+            margin-top: 20px;
         }
         #form-slc-nguoimuon{
             .MuiOutlinedInput-notchedOutline{
@@ -63,6 +63,24 @@
                     font-size: 12px;
                 }
             }
+        }
+        .modal-footer{
+            button {
+                height: 38px;
+                width: 64px;
+            }
+            #btn-update-publisher, #btn-add-publisher{
+                width: 100px;
+            }
+        }
+    }
+    #modalAddFine{
+        .modal-dialog{
+            width: 15%;
+            max-width: unset;
+        }
+        #btn-add-fine{
+            width: 150px;
         }
     }
 }

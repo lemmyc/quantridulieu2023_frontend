@@ -24,5 +24,32 @@
             }
         }
     }
-
+    .lb-add-book{
+        margin-left: 5px;
+    }
+    #modalBook{
+        #form-slc{
+            .MuiOutlinedInput-notchedOutline{
+                legend{
+                    font-size: 12px;
+                }
+            }
+        }
+        #form-slc-nxb{
+            .MuiOutlinedInput-notchedOutline{
+                legend{
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+    .modal-footer{
+        button {
+            height: 38px;
+            width: 64px;
+        }
+        #btn-add-book, #btn-update-book{
+            width: 100px;
+        }
+    }
 }
