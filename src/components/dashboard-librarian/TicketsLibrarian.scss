@@ -1,0 +1,68 @@
+.hidden-data{
+    display: none;
+}
+.ticket-librarian-container{
+    .lb-add-ticket {
+        margin-left: 5px;
+    }
+    .ticket-librarian-table{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        table{
+            height: 100%;
+            width: 90%;
+            thead {
+
+                tr{
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+            .col-icon {
+                width: 50px;
+                text-align: center;
+            }
+        }
+    }
+    .modal-dialog{
+        width: 62%;
+        max-width: unset;
+    }
+    .modal-footer{
+        button {
+            height: 38px;
+            width: 64px;
+        }
+    }
+    #modalTicket{
+        .disable-item{
+            -webkit-text-fill-color: rgb(0 0 0 / 55%);
+        }
+        .Mui-disabled {
+            -webkit-text-fill-color: rgb(0 0 0 / 55%);
+        }
+        input[readonly] {
+            -webkit-text-fill-color: rgb(0 0 0 / 55%);
+        }
+        .lbDatePicker{
+            width: 340px;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        .ipDatePicker {
+            height: 18px;
+            width: 21px;
+            border: 0;
+            margin-top: 14px;
+        }
+        #form-slc-nguoimuon{
+            .MuiOutlinedInput-notchedOutline{
+                legend{
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

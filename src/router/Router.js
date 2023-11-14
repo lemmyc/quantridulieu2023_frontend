@@ -8,6 +8,9 @@ import FinesReader from "../components/dashboard-reader/FinesReader";
 import DashboardLibrarian from "../components/dashboard-librarian/DashboardLibrarian";
 import BooksLibrarian from "../components/dashboard-librarian/BooksLibrarian";
 import AuthorsLibrarian from "../components/dashboard-librarian/AuthorsLibrarian";
+import GenresLibrarian from "../components/dashboard-librarian/GenresLibrarian";
+import PublisherLibrarian from "../components/dashboard-librarian/PublisherLibrarian";
+import TicketsLibrarian from "../components/dashboard-librarian/TicketsLibrarian";
 
 /**
  * MyRouter component
@@ -27,6 +30,9 @@ const Router = (props) => {
                 <Route path="/dashboard-librarian" element={<DashboardLibrarian />} />
                 <Route path="/books-librarian" element={<BooksLibrarian />} />
                 <Route path="/authors-librarian" element={<AuthorsLibrarian />} />
+                <Route path="/genres-librarian" element={<GenresLibrarian />} />
+                <Route path="/publishers-librarian" element={<PublisherLibrarian />} />
+                <Route path="/tickets-librarian" element={<TicketsLibrarian />} />
             </Routes>
         </BrowserRouter>
     );

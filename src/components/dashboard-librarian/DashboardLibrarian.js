@@ -225,11 +225,11 @@ const DashboardLibrarian = (props) => {
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
                     onClick={() => goToScreen('authors-librarian')}>Tác giả</Button>
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('')}>Thể loại sách</Button>
+                    onClick={() => goToScreen('genres-librarian')}>Thể loại sách</Button>
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('')}>Nhà Xuất Bản</Button>
+                    onClick={() => goToScreen('publishers-librarian')}>Nhà Xuất Bản</Button>
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('')}>Mượn sách</Button>
+                    onClick={() => goToScreen('tickets-librarian')}>Mượn sách</Button>
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
                     onClick={() => goToScreen('')}>Khoản phạt</Button>
             <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 

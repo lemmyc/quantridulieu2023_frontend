@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import TextField from '@mui/material/TextField';
@@ -17,49 +17,49 @@ import {
     MDBModalFooter,
 } from 'mdb-react-ui-kit';
 import { API_MAIN_URL, HEADER_REQUEST_POST } from "../../config/Constants";
-import "./AuthorsLibrarian.scss";
+import "./GenresLibrarian.scss";
 
 /**
- * AuthorsLibrarian component
- * @param {AuthorsLibrarian} props
+ * GenresLibrarian component
+ * @param {GenresLibrarian} props
  * @return {jsx}
  */
-const AuthorsLibrarian = (props) => {
+const GenresLibrarian = (props) => {
     
-    const [mangTacGia, setMangTacGia] = useState([]);
-    const [openModalAuthor, setOpenModalAuthor] = useState(false);
-    const [modeModalAuthor, setModeModalAuthor] = useState(null); // neu khac null thi luu id tac gia update, neu null la dang ky moi
-    const [objAuthor, setObjAuthor] = useState({
-        tenTacGia: "",
-        butDanh: "",
+    const [mangTheLoai, setMangTheLoai] = useState([]);
+    const [openModalGenre, setOpenModalGenre] = useState(false);
+    const [idGenreSelected, setIdGenreSelected] = useState(null); // neu khac null thi luu id tac gia update, neu null la dang ky moi
+    const [objGenre, setObjGenre] = useState({
+        tenTheLoai: "",
+        moTa: "",
     });
 
     // componentDidMout
     useEffect(() => {
-        callAPIGetAuthorList();
+        callAPIGetGenreList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if(!openModalAuthor){
-            setModeModalAuthor(null);
-            setObjAuthor({
-                tenTacGia: "",
-                butDanh: "",
+        if(!openModalGenre){
+            setIdGenreSelected(null);
+            setObjGenre({
+                tenTheLoai: "",
+                moTa: "",
             });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [openModalAuthor]);
+    }, [openModalGenre]);
 
-    const callAPIGetAuthorList = () => {
+    const callAPIGetGenreList = () => {
         fetch(
-            `${API_MAIN_URL}/get-authors`,
+            `${API_MAIN_URL}/get-genres`,
             { method: "GET" }
         )
         .then((response)  => {
            response.json().then((data) => {
                 if(data){
-                    setMangTacGia(data);
+                    setMangTheLoai(data);
                 }
             }).catch((err) => {
                 console.log(err);
@@ -67,15 +67,15 @@ const AuthorsLibrarian = (props) => {
         });
     }
 
-    const renderModalAuthor = () => {
-        return  <MDBModal id="modal-author" open={openModalAuthor} tabIndex="-1" staticBackdrop={true}>
+    const renderModalGenres = () => {
+        return  <MDBModal id="modal-genres" open={openModalGenre} tabIndex="-1" staticBackdrop={true}>
             <MDBModalDialog>
                 <MDBModalContent>
                     <MDBModalHeader>
                         {
-                            modeModalAuthor
-                            ? <MDBModalTitle>Cập nhật tác giả</MDBModalTitle>
-                            : <MDBModalTitle>Thêm mới tác giả</MDBModalTitle>
+                            idGenreSelected
+                            ? <MDBModalTitle>Cập nhật thể loại</MDBModalTitle>
+                            : <MDBModalTitle>Thêm mới thể loại</MDBModalTitle>
                         }
                     </MDBModalHeader>
                     <MDBModalBody>
@@ -84,38 +84,38 @@ const AuthorsLibrarian = (props) => {
                                 <TextField
                                     required
                                     fullWidth
-                                    name="tenTacGia"
-                                    label="Tên Tác Giả"
+                                    name="tenTheLoai"
+                                    label="Tên Thể Loại Sách"
                                     type="text"
-                                    id="tenTacGia"
-                                    autoComplete="tenTacGia"
-                                    value={objAuthor.tenTacGia}
-                                    onChange={e => setObjAuthor({ ...objAuthor, tenTacGia: e.target.value } )}
+                                    id="tenTheLoai"
+                                    autoComplete="tenTheLoai"
+                                    value={objGenre.tenTheLoai}
+                                    onChange={e => setObjGenre({ ...objGenre, tenTheLoai: e.target.value } )}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    multiline
                                     required
-                                    fullWidth
-                                    name="butDanh"
-                                    label="Bút Danh"
+                                    name="moTa"
+                                    label="Mô Tả Thể Loại"
                                     type="text"
-                                    id="butDanh"
-                                    autoComplete="butDanh"
-                                    value={objAuthor.butDanh}
-                                    onChange={e => setObjAuthor({ ...objAuthor, butDanh: e.target.value } )}
+                                    id="moTa"
+                                    autoComplete="moTa"
+                                    value={objGenre.moTa}
+                                    onChange={e => setObjGenre({ ...objGenre, moTa: e.target.value } )}
                                 />
                             </Grid>
                         </Grid>
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color='secondary' onClick={() => setOpenModalAuthor(false)}>
+                        <MDBBtn color='secondary' onClick={() => setOpenModalGenre(false)}>
                             Đóng
                         </MDBBtn>
                         {
-                            modeModalAuthor
-                            ? <MDBBtn id="btn-update-author" onClick={(evt) => callApiEditAuthor(evt)}>Cập nhật</MDBBtn>
-                            : <MDBBtn id="btn-add-author" onClick={(evt) => callApiAddAuthor(evt)}>Thêm Mới</MDBBtn>
+                            idGenreSelected
+                            ? <MDBBtn id="btn-update-genres" onClick={(evt) => callApiEditGenre(evt)}>Cập nhật</MDBBtn>
+                            : <MDBBtn id="btn-add-genres" onClick={(evt) => callApiAddGenre(evt)}>Thêm Mới</MDBBtn>
                         }
                     </MDBModalFooter>
                 </MDBModalContent>
@@ -123,24 +123,24 @@ const AuthorsLibrarian = (props) => {
       </MDBModal>
     }
 
-    const callApiAddAuthor = () => {
-        if(objAuthor.tenTacGia === "" || objAuthor.butDanh === ""){
+    const callApiAddGenre = () => {
+        if(objGenre.tenTheLoai === "" || objGenre.moTa === ""){
             alert("Vui lòng nhập đầy đủ thông tin");
         } else {
             fetch(
-                `${API_MAIN_URL}/add-author`,
+                `${API_MAIN_URL}/add-genre`,
                 {
                     ...HEADER_REQUEST_POST,
                     method: "POST",
-                    body: JSON.stringify({ ...objAuthor }), 
+                    body: JSON.stringify({ ...objGenre }), 
                 })
             .then((response)  => {
                response.json().then((data) => {
-                    // if xoa thanh cong
+                    // if them thanh cong
                     if(data?.success){
-                        alert("Đã thêm tác giả!");
-                        callAPIGetAuthorList();
-                        setOpenModalAuthor(false);
+                        alert("Đã thêm thể loại");
+                        callAPIGetGenreList();
+                        setOpenModalGenre(false);
                     } else {
                         alert("Đã xảy ra lỗi, không thành công");
                     }
@@ -151,24 +151,24 @@ const AuthorsLibrarian = (props) => {
         }
     }
 
-    const callApiEditAuthor = () => {
-        if(objAuthor.tenTacGia === "" || objAuthor.butDanh === ""){
+    const callApiEditGenre = () => {
+        if(objGenre.tenTheLoai === "" || objGenre.moTa === ""){
             alert("Vui lòng nhập đầy đủ thông tin");
         } else {
             fetch(
-                `${API_MAIN_URL}/edit-author`,
+                `${API_MAIN_URL}/edit-genre`,
                 {
                     ...HEADER_REQUEST_POST,
                     method: "PUT",
-                    body: JSON.stringify({ idTacGia: modeModalAuthor, ...objAuthor }), 
+                    body: JSON.stringify({ idTheLoaiSach: idGenreSelected, ...objGenre }), 
                 })
             .then((response)  => {
                response.json().then((data) => {
                     // if xoa thanh cong
                     if(data?.success){
-                        alert("Đã cập nhật thông tin tác giả!");
-                        callAPIGetAuthorList();
-                        setOpenModalAuthor(false);
+                        alert("Đã cập nhật thông tin thể loại!");
+                        callAPIGetGenreList();
+                        setOpenModalGenre(false);
                     } else {
                         alert("Đã xảy ra lỗi, không thành công");
                     }
@@ -179,32 +179,32 @@ const AuthorsLibrarian = (props) => {
         }
     }
 
-    const handleAddAuthor = (evt) => {
+    const handleAddGenre = (evt) => {
         evt.preventDefault();
-        setModeModalAuthor(null);
-        setObjAuthor({ 
-            tenTacGia: "",
-            butDanh: "",
+        setOpenModalGenre(null);
+        setObjGenre({ 
+            tenTheLoai: "",
+            moTa: "",
         });
-        setOpenModalAuthor(true);
+        setOpenModalGenre(true);
     }
 
-    const handleEditAuthor = (evt, idTacGia) => {
+    const handleEditGenres = (evt, idTheLoaiSach) => {
         evt.preventDefault();
-        setModeModalAuthor(idTacGia);
+        setIdGenreSelected(idTheLoaiSach);
         fetch(
-            `${API_MAIN_URL}/get-author/?${new URLSearchParams({ idTacGia })}`,
+            `${API_MAIN_URL}/get-genre/?${new URLSearchParams({ idTheLoaiSach })}`,
             { method: "GET" }
         )
         .then((response)  => {
            response.json().then((data) => {
                 if(data && data.length > 0){
-                    const userInfo = data[0];
-                    setObjAuthor({ 
-                        tenTacGia: userInfo.TG_TenTacGia,
-                        butDanh: userInfo.TG_ButDanh,
+                    const genreInfo = data[0];
+                    setObjGenre({ 
+                        tenTheLoai: genreInfo.TLS_TenTheLoai,
+                        moTa: genreInfo.TLS_MoTa,
                     });
-                    setOpenModalAuthor(true);
+                    setOpenModalGenre(true);
                 }
             }).catch((err) => {
                 console.log(err);
@@ -212,22 +212,22 @@ const AuthorsLibrarian = (props) => {
         });
     }
 
-    const handleRemoveAuthor = (evt, idTacGia) => {
+    const handleRemoveGenres = (evt, idTheLoaiSach) => {
         evt.preventDefault();
-        if(window.confirm("Bạn chắn chắn xóa tác giả này?")){
+        if(window.confirm("Bạn chắn chắn xóa thể loại này?")){
             fetch(
-                `${API_MAIN_URL}/delete-author`,
+                `${API_MAIN_URL}/delete-genre`,
                 {
                     ...HEADER_REQUEST_POST,
                     method: "DELETE",
-                    body: JSON.stringify({ idTacGia }), 
+                    body: JSON.stringify({ idTheLoaiSach }), 
                 })
             .then((response)  => {
                response.json().then((data) => {
                     // if xoa thanh cong
                     if(data?.success){
-                        alert("Đã xóa tác giả!");
-                        callAPIGetAuthorList();
+                        alert("Đã xóa thể loại!");
+                        callAPIGetGenreList();
                     } else {
                         alert("Đã xảy ra lỗi, không thành công");
                     }
@@ -240,7 +240,7 @@ const AuthorsLibrarian = (props) => {
 
     return (
         <React.Fragment>
-            <div className="author-librarian-container">
+            <div className="genres-librarian-container">
                 <Button size="medium" variant="contained" 
                     sx={{ marginLeft: 5, marginTop: 2  }} 
                     onClick={() => {window.location = 'dashboard-librarian'}}>
@@ -248,35 +248,36 @@ const AuthorsLibrarian = (props) => {
                 </Button>
                 <Button size="medium" variant="contained" 
                     sx={{ marginLeft: 5, marginTop: 2  }} 
-                    onClick={(e) => handleAddAuthor(e)}>
-                    <PersonAddAlt1Icon /> <label className="lb-add-author"> Thêm Tác Giả </label>
+                    onClick={(e) => handleAddGenre(e)}
+                >
+                    <BookmarkAddIcon /> <label className="lb-add-genres"> Thêm Thể Loại </label>
                 </Button>
-                <div className="author-librarian-table">
+                <div className="genres-librarian-table">
                     <table className="table table-bordered border-primary">
                         <thead>
                             <tr className="table-primary">
-                                <th scope="col" className="hidden-data">idTacGia</th>
-                                <th scope="col">Tên Tác Giả</th>
-                                <th scope="col">Bút danh</th>
+                                <th scope="col" className="hidden-data">idTheLoaiSach</th>
+                                <th scope="col">Tên Thể loại Sách</th>
+                                <th scope="col">Mô Tả</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             {
-                                mangTacGia.map((tacgia) => {
-                                    return <tr key={`tr-sach-${tacgia.TG_ID}`}>
-                                        <td className="hidden-data">{tacgia.TG_ID}</td>
-                                        <td>{tacgia.TG_TenTacGia}</td>
-                                        <td>{tacgia.TG_ButDanh}</td>
+                                mangTheLoai.map((theloai) => {
+                                    return <tr key={`tr-theloai-${theloai.TLS_ID}`}>
+                                        <td className="hidden-data">{theloai.TLS_ID}</td>
+                                        <td>{theloai.TLS_TenTheLoai}</td>
+                                        <td>{theloai.TLS_MoTa}</td>
                                         <td className="col-control-data">
                                             <IconButton aria-label="fingerprint" color="primary"
-                                                    onClick={(e) => handleEditAuthor(e, tacgia.TG_ID)}
+                                                    onClick={(e) => handleEditGenres(e, theloai.TLS_ID)}
                                                 >
                                                 <AppRegistrationIcon />
                                             </IconButton>
                                             <IconButton aria-label="fingerprint" color="primary"
-                                                    onClick={(e) => handleRemoveAuthor(e, tacgia.TG_ID)}
+                                                    onClick={(e) => handleRemoveGenres(e, theloai.TLS_ID)}
                                                 >
                                                 <DeleteForeverIcon />
                                             </IconButton>
@@ -287,10 +288,10 @@ const AuthorsLibrarian = (props) => {
                         </tbody>
                     </table>
                 </div>
-                {renderModalAuthor()}
+                {renderModalGenres()}
             </div>
         </React.Fragment>
     );
 }
 
-export default AuthorsLibrarian;
+export default GenresLibrarian;

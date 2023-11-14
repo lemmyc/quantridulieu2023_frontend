@@ -95,7 +95,7 @@ const TicketsReader = (props) => {
 
                                     {
                                         dataModalFine.map((fine) => {
-                                            return <tr key={`tr-fine-${fine.MS_ID}`}>
+                                            return <tr key={`tr-fine-${fine.KP_ID}`}>
                                                 <td className="hidden-data">{fine.KP_IDMuonSach}</td>
                                                 <td>{fine.S_TenSach}</td>
                                                 <td>{formatTrangThaiMuon(fine.MS_TrangThaiMuon)}</td>
@@ -167,7 +167,7 @@ const TicketsReader = (props) => {
                                             {
                                                 (
                                                     ticket.MS_TrangThaiMuon !== "borrowing"
-                                                    || ticket.MS_TrangThaiMuon !== ""
+                                                    && ticket.MS_TrangThaiMuon !== "on_time"
                                                 )
                                                 ? (
                                                     <IconButton aria-label="fingerprint" color="warning"

@@ -32,6 +32,7 @@ export const formatTrangThaiMuon = (value) => {
     }
 }
 
-export const formatDate = (value) => {
-    return value ? moment(value).format('DD-MM-YYYY HH:mm:ss') : value;
+export const formatDate = (value, formatString = null) => {
+    const strFormat = formatString ? formatString : 'DD/MM/YYYY';
+    return value ? moment(value).format(strFormat) : value;
 }

@@ -76,6 +76,7 @@ const SignInSignUp = (props) => {
                                 localStorage.setItem("idNguoiDung", data[0].ND_ID);
                                 localStorage.setItem("taiKhoan", data[0].ND_TaiKhoan);
                                 localStorage.setItem("vaiTro", data[0].ND_VaiTro);
+                                localStorage.setItem("tenNguoiDung", data[0].ND_HoTen);
                                 if(data[0].ND_VaiTro === "reader"){
                                     window.location = '/dashboard-reader';
                                 } else {
