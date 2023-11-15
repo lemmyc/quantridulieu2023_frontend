@@ -309,7 +309,7 @@ const TicketsLibrarian = (props) => {
                                 </FormControl>
                             </Grid>
                             {/* ngayMuon */}
-                            <Grid item xs={4}>
+                            <Grid item xs={12}>
                                 <TextField
                                     // className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
                                     className={`lbDatePicker`}
@@ -332,7 +332,7 @@ const TicketsLibrarian = (props) => {
                                 />
                             </Grid>
                             {/* ngayHenTra */}
-                            <Grid item xs={4}>
+                            <Grid item xs={12}>
                                 <TextField
                                     // className={`lbDatePicker ${(idMuonSachSelected) ? "disable-item" : ""}`}
                                     className={`lbDatePicker`}
@@ -355,7 +355,7 @@ const TicketsLibrarian = (props) => {
                                 />
                             </Grid>
                             {/* ngayTraThucTe */}
-                            <Grid item xs={4} sx={{ display: (!idMuonSachSelected) ? "none": "auto" }}>
+                            <Grid item xs={12} sx={{ display: (!idMuonSachSelected) ? "none": "auto" }}>
                                 <TextField
                                     className={`lbDatePicker ${(!idMuonSachSelected) ? "disable-item" : ""}`}
                                     name="ngayTraThucTe"
@@ -439,7 +439,7 @@ const TicketsLibrarian = (props) => {
                                 </FormControl>
                             </Grid>
                             {/* ngayTraThucTe */}
-                            <Grid item xs={4}>
+                            <Grid item xs={12}>
                                 <TextField
                                     className={`lbDatePicker`}
                                     name="ngayTraThucTe"
@@ -551,7 +551,6 @@ const TicketsLibrarian = (props) => {
     const callApiUpdateTicket = (evt) =>{
         if(objTicketSelected.ngayMuon === ""
             || objTicketSelected.ngayHenTra === ""
-            || objTicketSelected.ngayTraThucTe === ""
             || objTicketSelected.trangThaiMuon === ""
         ){
             alert("Vui lòng nhập đầy đủ thông tin");
@@ -568,7 +567,7 @@ const TicketsLibrarian = (props) => {
                         idSach: objTicketSelected.idSach,
                         ngayMuon: formatDate(objTicketSelected.ngayMuon, "YYYY-MM-DD"),
                         ngayHenTra: formatDate(objTicketSelected.ngayHenTra, "YYYY-MM-DD"),
-                        ngayTraThucTe: formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD"),
+                        ngayTraThucTe: objTicketSelected.ngayTraThucTe === "" ? null : formatDate(objTicketSelected.ngayTraThucTe, "YYYY-MM-DD"),
                         trangThaiMuon: objTicketSelected.trangThaiMuon,
                         idThuThu: objTicketSelected.idThuThu,
                     }), 
@@ -629,7 +628,7 @@ const TicketsLibrarian = (props) => {
                 body: JSON.stringify({ 
                     idMuonSach: idMuonSachSelected,
                     NgayGhiNhan: objFine.NgayGhiNhan,
-                    SoTienPhat: objFine.SoTienPhat,
+                    SoTienPhat: parseInt(objFine.SoTienPhat),
                 }), 
             })
         .then((response)  => {
@@ -771,11 +770,15 @@ const TicketsLibrarian = (props) => {
                                             </IconButton>
                                         </td>
                                         <td className="col-icon">
-                                            <IconButton aria-label="fingerprint" color="primary"
+                                            {
+                                                ticket.MS_TrangThaiMuon === "borrowing" ? (
+                                                <IconButton aria-label="fingerprint" color="primary"
                                                     onClick={(e) => handleEditTicket(e, ticket.MS_ID, true)}
                                                 >
                                                     <NextWeekIcon />
-                                            </IconButton>
+                                                </IconButton>) : <></>
+                                            }
+
                                         </td>
                                     </tr>
                                 })

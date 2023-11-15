@@ -1,5 +1,9 @@
 import moment from 'moment';
 
+export const formatTrangThaiSach = (value) => {
+    return value === "unavailable" ? "Không khả dụng" : "Khả dụng";
+}
+
 export const formatSoTienPhat = (value) => {
     return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
 }

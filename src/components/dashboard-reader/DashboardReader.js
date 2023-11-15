@@ -212,23 +212,34 @@ const DashboardReader = (props) => {
             </MDBModalDialog>
       </MDBModal>
     }
-    
+
+    const logout = () => {
+        localStorage.clear();
+        window.location = "/";
+    }
+
     const goToScreen = (path) => {
         window.location = path;
     }
 
     return (
         <React.Fragment>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('books-reader')}>Sách</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('tickets-reader')}>Mượn Sách</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('fines-reader')}>Khoản Phạt</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => getDataNguoiDung()}>Chỉnh sửa thông tin người dùng</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => setOpenModalUserPass(true)}>Thay đổi mật khẩu người dùng</Button>
+            <div className="reader-container">
+                <h1> ỨNG DỤNG QUẢN LÝ THƯ VIỆN </h1>
+                <h3> Xin chào đọc giả, {localStorage.getItem("tenNguoiDung")} </h3>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => goToScreen('books-reader')}>Sách</Button>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => goToScreen('tickets-reader')}>Mượn Sách</Button>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => goToScreen('fines-reader')}>Khoản Phạt</Button>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => getDataNguoiDung()}>Chỉnh sửa thông tin người dùng</Button>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => setOpenModalUserPass(true)}>Thay đổi mật khẩu người dùng</Button>
+                <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                        onClick={() => logout()}>Đăng Xuất</Button> 
+            </div>
             {renderModalEditUserInfo()}
             {renderModalEditUserPass()}
         </React.Fragment>

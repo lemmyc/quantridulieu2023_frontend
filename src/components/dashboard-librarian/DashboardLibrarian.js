@@ -214,30 +214,47 @@ const DashboardLibrarian = (props) => {
       </MDBModal>
     }
     
+    const logout = () => {
+        localStorage.clear();
+        window.location = "/";
+    }
+
     const goToScreen = (path) => {
         window.location = path;
     }
 
     return (
         <React.Fragment>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('books-librarian')}>Xem tất cả sách</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('authors-librarian')}>Tác giả</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('genres-librarian')}>Thể loại sách</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('publishers-librarian')}>Nhà Xuất Bản</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('tickets-librarian')}>Mượn sách</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => goToScreen('')}>Khoản phạt</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => getDataNguoiDung()}>Chỉnh sửa thông tin người dùng</Button>
-            <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
-                    onClick={() => setOpenModalUserPass(true)}>Thay đổi mật khẩu người dùng</Button>                    
-            {renderModalEditUserInfo()}
-            {renderModalEditUserPass()}
+            <div className="librarian-container">
+                <h1> ỨNG DỤNG QUẢN LÝ THƯ VIỆN </h1>
+                <h3> Xin chào thủ thư, {localStorage.getItem("tenNguoiDung")} </h3>
+                <div>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('books-librarian')}>Xem tất cả sách</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('authors-librarian')}>Tác giả</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('genres-librarian')}>Thể loại sách</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('publishers-librarian')}>Nhà Xuất Bản</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('tickets-librarian')}>Mượn sách</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('fines-librarian')}>Khoản phạt</Button>
+                </div>
+                <div>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => goToScreen('readers-librarian')}>Danh Sách Người Đọc</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => getDataNguoiDung()}>Chỉnh sửa thông tin người dùng</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => setOpenModalUserPass(true)}>Thay đổi mật khẩu người dùng</Button>
+                    <Button variant="contained" sx={{ marginLeft: 5, marginTop: 5  }} 
+                            onClick={() => logout()}>Đăng Xuất</Button> 
+                </div>
+                {renderModalEditUserInfo()}
+                {renderModalEditUserPass()}
+            </div>
         </React.Fragment>
     );
 }

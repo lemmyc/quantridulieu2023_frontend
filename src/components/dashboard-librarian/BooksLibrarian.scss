@@ -28,19 +28,30 @@
         margin-left: 5px;
     }
     #modalBook{
-        #form-slc{
+        #moTa{
+            resize: both;
+            max-height: 115px;
+            max-width: 438px;
+        }
+        .form-slc{
             .MuiOutlinedInput-notchedOutline{
                 legend{
                     font-size: 12px;
                 }
             }
         }
-        #form-slc-nxb{
+        .form-slc-nxb{
             .MuiOutlinedInput-notchedOutline{
                 legend{
-                    font-size: 24px;
+                    font-size: 26px;
                 }
             }
+        }
+    }
+    #modalListTicket {
+        .modal-dialog{
+            width: 50%;
+            max-width: unset;
         }
     }
     .modal-footer{
