@@ -37,9 +37,9 @@ const BooksReader = (props) => {
         if(typeSearch === 1){
             urlSearch = `${API_MAIN_URL}/get-book-by-publisher/?${new URLSearchParams({ tenNXB: cdtSearch })}`;
         } else if(typeSearch === 2){
-            urlSearch = `${API_MAIN_URL}/get-book-by-genre/?${new URLSearchParams({ tenTacGia: cdtSearch })}`;
+            urlSearch = `${API_MAIN_URL}/get-book-by-genre/?${new URLSearchParams({ tenTheLoai: cdtSearch })}`;
         } else if(typeSearch === 3) {
-            urlSearch = `${API_MAIN_URL}/get-book-by-author/?${new URLSearchParams({ tenTheLoai: cdtSearch })}`;
+            urlSearch = `${API_MAIN_URL}/get-book-by-author/?${new URLSearchParams({ tenTacGia: cdtSearch })}`;
         } else {
             urlSearch = `${API_MAIN_URL}/get-books`;
         }
