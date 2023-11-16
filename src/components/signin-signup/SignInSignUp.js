@@ -49,7 +49,9 @@ const SignInSignUp = (props) => {
     const Copyright = (props) => {
         return (
             <Typography variant="body2" color="text.secondary" align="center" {...props}>
-                {`Copyright © LNBDANG@DEV${new Date().getFullYear()}`}
+                {`B2016955 Lê Nguyễn Bảo Đăng & B2016964 Đặng Thị Hiệp`}
+                <br/>
+                {`Nhóm 3 - Quản trị dữ liệu 2023`}
             </Typography>
         );
     }
@@ -210,7 +212,7 @@ const SignInSignUp = (props) => {
                                     required
                                     fullWidth
                                     id="taiKhoan"
-                                    label="Tai Khoan"
+                                    label="Tài Khoản"
                                     name="taiKhoan"
                                     autoComplete="Tài Khoản"
                                     value={taiKhoan}

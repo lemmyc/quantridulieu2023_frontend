@@ -129,6 +129,11 @@ const TicketsReader = (props) => {
                     onClick={() => {window.location = 'dashboard-reader'}}>
                     Trở về
                 </Button>
+                <Button size="medium" variant="contained" 
+                    sx={{ marginLeft: 5, marginTop: 2  }} 
+                    onClick={() => {window.print();}}>
+                    In thông tin
+                </Button>
                 <div className="ticket-reader-table">
                     <table className="table table-bordered border-primary">
                         <thead>

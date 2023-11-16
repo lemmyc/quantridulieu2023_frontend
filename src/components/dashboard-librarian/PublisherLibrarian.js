@@ -263,6 +263,11 @@ const PublisherLibrarian = (props) => {
                 >
                     <AddBusinessIcon /> <label className="lb-add-publisher"> Thêm Nhà Xuất Bản </label>
                 </Button>
+                <Button size="medium" variant="contained" 
+                    sx={{ marginLeft: 5, marginTop: 2  }} 
+                    onClick={() => {window.print();}}>
+                    In thông tin
+                </Button>
                 <div className="publisher-librarian-table">
                     <table className="table table-bordered border-primary">
                         <thead>

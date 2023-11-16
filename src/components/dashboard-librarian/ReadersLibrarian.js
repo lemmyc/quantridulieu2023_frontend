@@ -131,6 +131,11 @@ const ReadersLibrarian = (props) => {
                     onClick={() => {window.location = 'dashboard-librarian'}}>
                     Trở về
                 </Button>
+                <Button size="medium" variant="contained" 
+                    sx={{ marginLeft: 5, marginTop: 2  }} 
+                    onClick={() => {window.print();}}>
+                    In thông tin
+                </Button>
                 <div className="reader-librarian-table">
                     <table className="table table-bordered border-primary">
                         <thead>

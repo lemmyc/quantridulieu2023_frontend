@@ -488,6 +488,11 @@ const BooksLibrarian = (props) => {
                     onClick={() => {window.location = 'dashboard-librarian'}}>
                     Trở về
                 </Button>
+                <Button size="medium" variant="contained" 
+                    sx={{ marginLeft: 5, marginTop: 2  }} 
+                    onClick={() => {window.print();}}>
+                    In thông tin
+                </Button>
                 <div className="container-control">
                     <TextField margin="normal"
                         required

@@ -252,6 +252,11 @@ const GenresLibrarian = (props) => {
                 >
                     <BookmarkAddIcon /> <label className="lb-add-genres"> Thêm Thể Loại </label>
                 </Button>
+                <Button size="medium" variant="contained" 
+                    sx={{ marginLeft: 5, marginTop: 2  }} 
+                    onClick={() => {window.print();}}>
+                    In thông tin
+                </Button>
                 <div className="genres-librarian-table">
                     <table className="table table-bordered border-primary">
                         <thead>
